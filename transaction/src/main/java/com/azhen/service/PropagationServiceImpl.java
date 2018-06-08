@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Azhen
@@ -36,12 +38,30 @@ public class PropagationServiceImpl implements PropagationService{
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void requireNewSuccess() {
-        Person person = new Person();
+       /* Person person = new Person();
         person.setAddress("requireNew");
         person.setAge(18);
         person.setName("requireNew");
         personRepository.save(person);
-        // require2();
+        require2();*/
+       addPerson();
+    }
+
+    private void addPerson() {
+        List<Person> people = new ArrayList<>();
+        for (int i = 0; i < 10; i ++) {
+            Person person = new Person();
+            person.setAddress(String.valueOf(i));
+            person.setAge(18);
+            person.setName(String.valueOf(i));
+            people.add(person);
+        }
+
+        people.parallelStream().forEach(person -> {
+            String threadName = Thread.currentThread().getName();
+            person.setAddress(threadName);
+            personRepository.save(person);
+        });
     }
 
     @Override
