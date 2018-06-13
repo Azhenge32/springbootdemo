@@ -58,7 +58,6 @@ public class RedisCache {
 		Jedis jedis = null;
 		try {
 			jedis = this.getConnection();
-
 			jedis.set(key, JSON.toJSONString(value));
 			if (cacheSeconds != 0) {
 				jedis.expire(key, cacheSeconds);
