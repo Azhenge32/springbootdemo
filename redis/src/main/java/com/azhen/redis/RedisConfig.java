@@ -44,4 +44,8 @@ public class RedisConfig {
         JedisPool jedisPool = new JedisPool(jedisPoolConfig, "127.0.0.1", 6379, 5000);
         return jedisPool;
     }
+
+    @Bean
+    public SubscriberFactory subscriberFactory(RedisCache redisCache, Subscriber subscriber) {
+    }
 }

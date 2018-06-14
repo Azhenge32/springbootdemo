@@ -1,6 +1,7 @@
 package com.azhen.redis.core;
 
 import com.alibaba.fastjson.JSON;
+import com.azhen.redis.like.RedisException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import java.util.*;
 
 public class RedisCache {
 
-	private static final Logger logger = LoggerFactory.getLogger(RedisCache.class);
+	protected static final Logger logger = LoggerFactory.getLogger(RedisCache.class);
 
 	public final int EXPIRE = 7200;
 
@@ -68,6 +69,7 @@ public class RedisCache {
 			releaseConnection(jedis);
 		}
 	}
+
 
 	public <T> void set(Map<String, T> batchData, int cacheSeconds) {
 		Jedis jedis = null;
@@ -446,7 +448,77 @@ public class RedisCache {
 			jedis.subscribe(jedisPubSub, CHANNEL_CONSOLE);
 		} catch (JedisException e) {
 			logger.error(e.getLocalizedMessage(),e);
+			throw new RedisException("Redis Oper Exp");
 		} finally {
+			releaseConnection(jedis);
+		}
+	}
+
+	/** ----------------------- 点赞 ---------------------* /
+
+	 /**
+	 * 向Redis中Set集合添加值:点赞
+	 * @return
+	 */
+	public long sadd(String key, String value){
+		Jedis jedis = null;
+		try{
+			jedis =  jedisPool.getResource();
+			return jedis.sadd(key, value);
+		}catch (JedisException e){
+			logger.error(e.getMessage(),e);
+			return 0;
+		}finally {
+			releaseConnection(jedis);
+		}
+	}
+
+	public long srem(String key, String value) {
+		Jedis jedis = null;
+		try{
+			jedis =  jedisPool.getResource();
+			return jedis.srem(key, value);
+		}catch (JedisException e){
+			logger.error(e.getMessage(),e);
+			return 0;
+		}finally {
+			releaseConnection(jedis);
+		}
+	}
+
+	/**
+	 *判断key,value是否是集合中值
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public boolean sismember(String key, String value){
+		Jedis jedis = null;
+		try{
+			jedis =  jedisPool.getResource();
+			return jedis.sismember(key, value);
+		}catch (JedisException e){
+			logger.error(e.getMessage(),e);
+			return false;
+		}finally {
+			releaseConnection(jedis);
+		}
+	}
+
+	/**
+	 * 获取集合大小
+	 * @param key
+	 * @return
+	 */
+	public long scard(String key){
+		Jedis jedis = null;
+		try{
+			jedis =  jedisPool.getResource();
+			return jedis.scard(key);
+		}catch (JedisException e){
+			logger.error(e.getMessage(),e);
+			return 0;
+		}finally {
 			releaseConnection(jedis);
 		}
 	}

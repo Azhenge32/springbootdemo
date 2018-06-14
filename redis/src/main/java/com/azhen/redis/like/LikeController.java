@@ -13,35 +13,34 @@ public class LikeController {
     @Resource
     private LikeService likeService;
 
-    private static class LikeRequestBody {
-        private String photoId;
-        private String userId;
-
-        public String getPhotoId() {
-            return photoId;
-        }
-
-        public void setPhotoId(String photoId) {
-            this.photoId = photoId;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(String userId) {
-            this.userId = userId;
-        }
-    }
     @PostMapping("/like")
     public String like(@RequestBody LikeRequestBody body) {
-        System.out.println(body.photoId);
+        //在likeKey对应的集合中加入当前用户的id
+        long likeCount = likeService.like(body.getUserId(), EntityType.ENTITY_NEWS, body.getArticleId());
+
+        // 操作MySQL, 资讯上更新点赞数
+        // likeService.updateLikeCount(newsId, (int)likeCount);
         return "点赞成功";
     }
 
 
     @RequestMapping("/unlike")
-    public String unlike() {
+    public String unlike(@RequestBody LikeRequestBody body) {
+//在disLikeKey对应的集合中加入当前用户
+        long likeCount = likeService.disLike(body.getUserId(), EntityType.ENTITY_NEWS, body.getArticleId());
+        if(likeCount <= 0){
+            likeCount = 0;
+        }
+
+        // 操作MySQL, 资讯上更新点赞数
+        // likeService.updateLikeCount(newsId, (int)likeCount);
         return "取消点赞成功";
     }
+
+ /*   @RequestMapping("/article")
+    public String articleLIke(@RequestBody LikeRequestBody body) {
+        // 操作MySQL, 资讯上更新点赞数
+        // likeService.updateLikeCount(newsId, (int)likeCount);
+        return "取消点赞成功";
+    }*/
 }
