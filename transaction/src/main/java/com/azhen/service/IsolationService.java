@@ -92,4 +92,18 @@ public class IsolationService {
             personRepository.save(person);
         });
     }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void likeCount() {
+//        Person person = new Person();
+//        person.setName("bb");
+//        person.setAge(111);
+//        personRepository.save(person);
+       /* Person person = personRepository.getOne(1L);
+        int age = person.getAge();
+        System.out.println(age);
+        person.setAge(age + 1);
+        personRepository.saveAndFlush(person);*/
+       personRepository.incAge(1L);
+    }
 }

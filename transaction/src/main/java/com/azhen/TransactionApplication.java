@@ -17,22 +17,25 @@ import javax.sql.DataSource;
 
 @SpringBootApplication
 @EnableTransactionManagement
-// public class TransactionApplication implements TransactionManagementConfigurer
-public class TransactionApplication {
+public class TransactionApplication implements TransactionManagementConfigurer {
+//public class TransactionApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TransactionApplication.class, args);
 	}
 
-	/*@Resource(name="txManager2")
-	private PlatformTransactionManager txManager2;*/
+	@Resource(name="txManager1")
+	private PlatformTransactionManager txManager1;
+
+	@Resource(name="transactionManager")
+	private PlatformTransactionManager txManager2;
 
 	@Bean
 	public DataSource dataSource() {
 		HikariDataSource dataSource = new HikariDataSource();
 		dataSource.setUsername("root");
-		dataSource.setPassword("Linggu123!@#");
-		dataSource.setJdbcUrl("jdbc:mysql://112.74.191.64:3306/esquelpass2?verifyServerCertificate=false&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=utf-8");
+		dataSource.setPassword("Linkgoo123!@#");
+		dataSource.setJdbcUrl("jdbc:mysql://127.0.0.1:3308/esquelpass2?verifyServerCertificate=false&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=utf-8");
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		dataSource.setAutoCommit(true);
 		// dataSource.setAutoCommit(true);
@@ -40,14 +43,14 @@ public class TransactionApplication {
 	}
 
 	// 创建事务管理器1
-	/*@Bean(name = "txManager1")
+	@Bean(name = "txManager1")
 	public PlatformTransactionManager txManager(DataSource dataSource) {
 		System.out.println(dataSource.getClass().getName());
 		return new DataSourceTransactionManager(dataSource);
 	}
 
 	// 创建事务管理器2
-	@Bean(name = "txManager2")
+	@Bean(name = "transactionManager")
 	public JpaTransactionManager txManager2(EntityManagerFactory factory) {
 		return new JpaTransactionManager(factory);
 	}
@@ -68,5 +71,5 @@ public class TransactionApplication {
 	@Override
 	public PlatformTransactionManager annotationDrivenTransactionManager() {
 		return txManager2;
-	}*/
+	}
 }
