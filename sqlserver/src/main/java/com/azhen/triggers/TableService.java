@@ -1,4 +1,4 @@
-package com.azhen;
+package com.azhen.triggers;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Random;
 
-@Service
-@Transactional(rollbackFor = Exception.class)
+//@Service
+//@Transactional(rollbackFor = Exception.class)
 public class TableService {
     @Resource
     private TableRepository tableRepository;

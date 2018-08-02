@@ -1,12 +1,12 @@
-package com.azhen;
+package com.azhen.triggers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@RestController
-@RequestMapping("/table")
+//@RestController
+//@RequestMapping("/table")
 public class TableController {
     @Resource
     TableService tableService;

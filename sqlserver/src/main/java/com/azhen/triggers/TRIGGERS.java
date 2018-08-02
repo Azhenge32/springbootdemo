@@ -1,10 +1,10 @@
-package com.azhen;
+package com.azhen.triggers;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "QRTZ_TRIGGERS222")
+//@Entity
+//@Table(name = "QRTZ_TRIGGERS222")
 public class TRIGGERS {
     @Id
     @GeneratedValue
