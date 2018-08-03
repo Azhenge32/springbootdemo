@@ -1,26 +1,19 @@
 package com.azhen.copy;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Repeat;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-//@Transactional
-public class ApplicationTests {
-
+@Component
+public class PilotSynchronizeJob {
     @Autowired
     @Qualifier("primaryJdbcTemplate")
     protected JdbcTemplate jdbcTemplate1;
@@ -29,15 +22,9 @@ public class ApplicationTests {
     @Qualifier("secondaryJdbcTemplate")
     protected JdbcTemplate jdbcTemplate2;
 
-   @Before
-    public void setUp() {
-
-    }
     private static final Integer FACTOR = 100;
-
-    @Test
-    @Repeat(10)
-    public void test() throws Exception {
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void pushDataScheduled(){
         syncRealtime("realtime_ai");
         syncRealtime("realtime_di");
     }
@@ -91,7 +78,5 @@ public class ApplicationTests {
             System.out.println(sql);
             jdbcTemplate2.update(sql);
         }
-
-        Assert.assertEquals(String.valueOf(realtimeAis.size()), jdbcTemplate1.queryForObject("select count(1) from " + table, String.class));
     }
 }
