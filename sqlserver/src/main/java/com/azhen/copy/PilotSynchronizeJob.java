@@ -1,6 +1,5 @@
 package com.azhen.copy;
 
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,7 +7,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,15 +20,16 @@ public class PilotSynchronizeJob {
     @Qualifier("secondaryJdbcTemplate")
     protected JdbcTemplate jdbcTemplate2;
 
-    private static final Integer FACTOR = 100;
+    private static final Integer THRESHOLD = 100;
     @Scheduled(cron = "0/30 * * * * ?")
     public void pushDataScheduled(){
         syncRealtime("realtime_ai");
         syncRealtime("realtime_di");
+        syncRealtime("realtime_acc");
     }
 
     private void syncRealtime(String table) {
-        List<Map<String, Object>> realtimeAis = jdbcTemplate1.queryForList("select * from " + table);
+        List<Map<String, Object>> realtimeAis = jdbcTemplate1.queryForList("select " + "PtId,Value,UpdateTime" +" from " + table);
         String insertSql = "insert into " + table + "(PtId,Value,UpdateTime) values";
         StringBuilder sqlBuilder = new StringBuilder(insertSql);
         int listSize = 0;
@@ -60,7 +59,7 @@ public class PilotSynchronizeJob {
                     .append("'").append(UpdateTime).append("')");
             System.out.println(sqlBuilder.toString());
             listSize ++;
-            if (listSize == FACTOR) {
+            if (listSize == THRESHOLD) {
                 sqlBuilder.append(";");
                 System.out.println(sqlBuilder.toString());
                 jdbcTemplate2.update(sqlBuilder.toString());

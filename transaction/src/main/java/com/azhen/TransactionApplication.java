@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Date;
 
 @SpringBootApplication
 @EnableTransactionManagement

@@ -33,7 +33,7 @@ public class ApplicationTests {
     public void setUp() {
 
     }
-    private static final Integer FACTOR = 100;
+    private static final Integer THRESHOLD = 100;
 
     @Test
     @Repeat(10)
@@ -43,7 +43,7 @@ public class ApplicationTests {
     }
 
     private void syncRealtime(String table) {
-        List<Map<String, Object>> realtimeAis = jdbcTemplate1.queryForList("select * from " + table);
+        List<Map<String, Object>> realtimeAis = jdbcTemplate1.queryForList("select " + "PtId,Value,UpdateTime" +" from " + table);
         String insertSql = "insert into " + table + "(PtId,Value,UpdateTime) values";
         StringBuilder sqlBuilder = new StringBuilder(insertSql);
         int listSize = 0;
@@ -73,7 +73,7 @@ public class ApplicationTests {
                     .append("'").append(UpdateTime).append("')");
             System.out.println(sqlBuilder.toString());
             listSize ++;
-            if (listSize == FACTOR) {
+            if (listSize == THRESHOLD) {
                 sqlBuilder.append(";");
                 System.out.println(sqlBuilder.toString());
                 jdbcTemplate2.update(sqlBuilder.toString());

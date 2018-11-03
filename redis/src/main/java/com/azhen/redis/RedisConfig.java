@@ -1,6 +1,7 @@
 package com.azhen.redis;
 
 import com.azhen.redis.core.RedisCache;
+import com.azhen.redis.core.lock.RedisReentrantLock;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +27,6 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisCache redisCache(JedisPool jedisPool) {
-        RedisCache redisCache = new RedisCache();
-        redisCache.setJedisPool(jedisPool);
-        return redisCache;
-    }
-
-    @Bean
     public JedisPool jedisPool() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxWaitMillis(4000);
@@ -46,6 +40,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public SubscriberFactory subscriberFactory(RedisCache redisCache, Subscriber subscriber) {
+    public RedisCache redisCache(JedisPool jedisPool) {
+        return new RedisCache(jedisPool);
+    }
+
+    @Bean
+    public RedisReentrantLock redisWithReentrantLock(JedisPool jedisPool) {
+        return new RedisReentrantLock(jedisPool);
     }
 }

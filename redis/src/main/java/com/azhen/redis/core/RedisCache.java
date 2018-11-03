@@ -23,14 +23,9 @@ public class RedisCache {
 
 	protected JedisPool jedisPool;
 
-	public JedisPool getJedisPool() {
-		return jedisPool;
-	}
-
-	public void setJedisPool(JedisPool jedisPool) {
+	public RedisCache(JedisPool jedisPool) {
 		this.jedisPool = jedisPool;
 	}
-
 	protected Jedis getConnection() throws JedisException {
 		Jedis jedis = null;
 		try {
@@ -50,6 +45,7 @@ public class RedisCache {
 			jedis.close();
 		}
 	}
+
 
 	public <T> void set(String key, T value) {
 		set(key, value, EXPIRE);
@@ -521,5 +517,22 @@ public class RedisCache {
 		}finally {
 			releaseConnection(jedis);
 		}
+	}
+
+	protected void del(String key) {
+		try (Jedis jedis = jedisPool.getResource()) {
+			jedis.del(key);
+		} catch (JedisException e) {
+			logger.error(e.getMessage(),e);
+		}
+	}
+
+	protected String set(String key, String value, String nx, String ex, Long time) {
+		try (Jedis jedis = jedisPool.getResource()) {
+			return jedis.set(key, "", "nx", "ex", 5L);
+		} catch (JedisException e) {
+			logger.error(e.getMessage(),e);
+		}
+		return null;
 	}
 }
