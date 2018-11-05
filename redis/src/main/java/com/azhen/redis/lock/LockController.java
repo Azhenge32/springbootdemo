@@ -1,6 +1,10 @@
 package com.azhen.redis.lock;
 
 import com.azhen.redis.core.lock.RedisLockServiceTemplate;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +38,14 @@ public class LockController {
         }
         System.out.printf("Cost Time : %d\n", System.currentTimeMillis() - startTime);
        return null;
+    }
+
+
+    public static void main(String[] args) {
+        Config config = new Config();
+        config. useSingleServer().setAddress("127.0.0.1:6379");
+        RedissonClient redisson = Redisson.create(config);
+        RLock lock = redisson.getLock("hello");
+        lock.lock();
     }
 }
