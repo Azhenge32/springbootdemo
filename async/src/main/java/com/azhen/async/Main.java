@@ -1,14 +1,18 @@
 package com.azhen.async;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * @author Azhen
  * @date 2018/03/30
  */
+@SpringBootApplication
+@EnableAsync
 public class Main {
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext context =
+       /* AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(TaskExecutorConfig.class);
         AsyncTaskService asyncTaskService =
                 context.getBean(AsyncTaskService.class);
@@ -17,6 +21,7 @@ public class Main {
             asyncTaskService.executeAsyncTask(i);
             asyncTaskService.executeAsyncTaskPlus(i);
         }
-        context.close();
+        context.close();*/
+        SpringApplication.run(Main.class, args);
     }
 }
